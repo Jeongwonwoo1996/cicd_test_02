@@ -23,20 +23,20 @@ jobs:
           mkdir -p src/main/resources || true
           echo "${{secrets.APPLICATION_YML}}" > ./src/main/resources/application.yml
           cat ./src/main/resources/application.yml
-          
 
       - name: jar 파일 생성(build)
         run: |
           chmod +x ./gradlew # 실행권한 추가
-          ./gradlew clean build
+          ./gradlew clean build 
 
       - name: 빌드된 jar 파일 이름변경 및 이동
         run: |
           pwd
+          ls -al ./build/libs
           mv ./build/libs/*SNAPSHOT.jar ./app.jar
           ls -al
 
-      - name: EC2로 jar 파일을 전송
+      - name: EC2 로 jar 파일을 전송
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{secrets.EC2_HOST}}
@@ -61,5 +61,6 @@ jobs:
             sudo fuser -k -n tcp 8080 || true
             rm -rf /home/ubuntu/prod/cur || true
             mkdir /home/ubuntu/prod/cur
-            mv ../tobe/app.jar .
+            cd /home/ubuntu/prod/cur
+            mv ../tobe/app.jar .  
             sudo nohup java -jar app.jar > ./output.log 2>&1 &
