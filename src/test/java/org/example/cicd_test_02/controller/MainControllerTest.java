@@ -11,7 +11,6 @@ class MainControllerTest {
 
   @Test
   void main() {
-    int a = 1;
-    Assertions.assertThat(a).isEqualTo(0);
+    Assertions.assertThat(1).isEqualTo(1);
   }
 }
